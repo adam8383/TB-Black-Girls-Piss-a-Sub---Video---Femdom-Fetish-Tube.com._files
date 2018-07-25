@@ -1,0 +1,94 @@
+(function (w, d) {
+	var cookieName = 'AweCrPu';
+    w.AWE_CR_PU_IGNORE = w.AWE_CR_PU_IGNORE || ['.awn-ignore'];
+
+	if (document.cookie.indexOf(cookieName + '=1') !== -1) {
+		return;
+	}
+
+	var addScript = function (src, onLoad) {
+		var loadedScripts = d.getElementsByTagName('script');
+
+		for (var i = 0; i < loadedScripts.length; i++) {
+			if (loadedScripts[i].src == location.protocol + src) {
+				onLoad.call();
+
+				return;
+			}
+		}
+
+		var scriptElement = d.createElement('script'),
+			body = d.getElementsByTagName('body')[0];
+
+		scriptElement.src = src;
+		scriptElement.async = true;
+		scriptElement.onload = onLoad;
+
+		body.appendChild(scriptElement);
+	};
+
+	w.popns = 'AweCrPu';
+
+	var init = function () {
+		var getWidth = function () {
+			return 1100;
+		};
+
+		var getHeight = function () {
+			return 800;
+		};
+
+		var getLeft = function () {
+			return (w.screen.width - getWidth()) / 2;
+		};
+
+		var getTop = function () {
+			return (w.screen.height - getHeight()) / 2;
+		};
+
+		
+		w.AweCrPu
+			.config({
+                safe               : true,
+                perpage            : 1,
+                coverTags          : ['iframe'],
+                ignoreTo           : w.AWE_CR_PU_IGNORE,
+				ignoreListener     : false,
+				coverScrollbar     : false,
+				webkitAnchorBlank  : false,
+				forceUnder         : false,
+				popFallbackOptions : { under: true, newTab: true },
+				initOnload         : false
+			})
+			.add('//ptentry.com/pu/?target=wl/ad&site=lpr&psid=petera&pstool=200_9&psprogram=revs&campaign_id=&category=fetish&cobrandid=&subaffid={SUBAFFID}&width=1100&height=800', {
+				cookieName    : cookieName,
+				cookieExpires : 86400,
+				width         : getWidth(),
+				height        : getHeight(),
+				left          : getLeft(),
+				top           : getTop()
+			});
+
+        if (w.awnPopCC && typeof w.awnPopCC === 'object') {
+            w.AweCrPu.config(w.awnPopCC);
+        }
+	};
+
+	var initInterval = setInterval(function () {
+		if (document.readyState !== 'complete') {
+			return;
+		}
+
+		clearInterval(initInterval);
+
+		addScript(
+			'//static1.jsmstatic.com/Scripts/pu_script_2_8_22.js',
+			function () {
+				addScript(
+					'//static1.jsmstatic.com/Scripts/pu_ljsm.js',
+					init
+				)
+			}
+		);
+	}, 10);
+}(window, document));
